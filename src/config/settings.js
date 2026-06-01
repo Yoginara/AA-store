@@ -22,5 +22,5 @@ export const settings = {
     email: "kontak@udabangadik.com",
     established: "1998"
   },
-  apiBaseUrl: isLocalhost ? "http://localhost:5000" : "/_/backend"
+  apiBaseUrl: isLocalhost ? "http://localhost:5000" : ""
 };
