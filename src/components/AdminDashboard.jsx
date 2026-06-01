@@ -18,7 +18,6 @@ export default function AdminDashboard({ token, onLogout, onProductsUpdate, fall
   const [formName, setFormName] = useState("");
   const [formCategory, setFormCategory] = useState("sepatu laki-laki");
   const [formPrice, setFormPrice] = useState("");
-  const [formStock, setFormStock] = useState("10");
   const [formDescription, setFormDescription] = useState("");
   const [formImageUrl, setFormImageUrl] = useState("");
   const [formImageFile, setFormImageFile] = useState(null);
@@ -62,7 +61,6 @@ export default function AdminDashboard({ token, onLogout, onProductsUpdate, fall
     setFormName("");
     setFormCategory("sepatu laki-laki");
     setFormPrice("");
-    setFormStock("10");
     setFormDescription("");
     setFormImageUrl("");
     setFormImageFile(null);
@@ -77,7 +75,6 @@ export default function AdminDashboard({ token, onLogout, onProductsUpdate, fall
     setFormName(product.name);
     setFormCategory(product.category);
     setFormPrice(product.price.toString());
-    setFormStock(product.stock !== undefined ? product.stock.toString() : "10");
     setFormDescription(product.description || "");
     setFormImageUrl(product.image_url || "");
     setFormImageFile(null);
@@ -102,7 +99,6 @@ export default function AdminDashboard({ token, onLogout, onProductsUpdate, fall
     formData.append("name", formName);
     formData.append("category", formCategory);
     formData.append("price", formPrice);
-    formData.append("stock", formStock);
     formData.append("description", formDescription);
 
     if (formImageFile) {
@@ -140,7 +136,6 @@ export default function AdminDashboard({ token, onLogout, onProductsUpdate, fall
       console.warn("⚠️  [OFFLINE CRUD CREATE/UPDATE] Mensimulasikan operasi simpan pada state lokal...");
       
       const priceNum = parseFloat(formPrice) || 0;
-      const stockNum = parseInt(formStock) || 0;
       const dummyImg = formImageUrl || (formImageFile ? URL.createObjectURL(formImageFile) : "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=600");
 
       if (modalMode === "add") {
@@ -151,7 +146,6 @@ export default function AdminDashboard({ token, onLogout, onProductsUpdate, fall
           name: formName,
           category: formCategory,
           price: priceNum,
-          stock: stockNum,
           description: formDescription,
           image_url: dummyImg,
           rating: 4.5,
@@ -170,7 +164,6 @@ export default function AdminDashboard({ token, onLogout, onProductsUpdate, fall
               name: formName,
               category: formCategory,
               price: priceNum,
-              stock: stockNum,
               description: formDescription,
               image_url: dummyImg
             };
@@ -220,9 +213,8 @@ export default function AdminDashboard({ token, onLogout, onProductsUpdate, fall
   });
 
   // Hitung Nilai Ringkasan Statistik
-  const totalStock = products.reduce((sum, p) => sum + (p.stock || 10), 0);
   const footwearCount = products.filter(p => p.category && !p.category.toLowerCase().startsWith("tas")).length;
-  const bagsCount = products.filter(p => p.category === "tas sekolah").length;
+  const bagsCount = products.filter(p => p.category && p.category.toLowerCase().includes("tas")).length;
 
   return (
     <div className="min-h-screen bg-primary-950 flex flex-col lg:flex-row text-left">
@@ -293,7 +285,7 @@ export default function AdminDashboard({ token, onLogout, onProductsUpdate, fall
               Persediaan Gudang UD ABANG ADIK
             </h1>
             <p className="text-xs text-primary-400 font-semibold mt-1">
-              Tambahkan produk baru, edit detail harga, kelola stok barang, dan unggah foto dagangan.
+              Tambahkan produk baru, edit detail harga, dan unggah foto dagangan ke katalog toko.
             </p>
           </div>
           
