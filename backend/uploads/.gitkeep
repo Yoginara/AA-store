@@ -1,0 +1,3 @@
+# Folder ini digunakan untuk menyimpan gambar produk yang diunggah melalui admin.
+# File ini menjaga direktori uploads/ tetap ada di git.
+# Isi folder ini (gambar) diabaikan oleh .gitignore.

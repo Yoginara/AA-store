@@ -144,16 +144,18 @@ app.get("/api/products/:id", async (req, res) => {
 
 // 4. POST: Tambah Produk Baru (Protected - Admin Only)
 app.post("/api/products", authenticateToken, upload.single("image"), async (req, res) => {
-  const { name, category, price, stock, description, image_url } = req.body;
+  const { name, category, price, description, image_url } = req.body;
 
-  if (!name || !category || !price || stock === undefined) {
-    return res.status(400).json({ message: "Form wajib (Nama, Kategori, Harga, Stok) belum lengkap." });
+  if (!name || !category || !price) {
+    return res.status(400).json({ message: "Form wajib (Nama, Kategori, Harga) belum lengkap." });
   }
 
   // Tentukan URL gambar: unggah berkas lokal atau fallback teks input tautan
   let finalImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=600"; // Fallback awal
   if (req.file) {
-    finalImageUrl = `http://localhost:${PORT}/uploads/${req.file.filename}`;
+    const host = req.get("host");
+    const protocol = req.protocol;
+    finalImageUrl = `${protocol}://${host}/uploads/${req.file.filename}`;
   } else if (image_url) {
     finalImageUrl = image_url;
   }
@@ -164,8 +166,8 @@ app.post("/api/products", authenticateToken, upload.single("image"), async (req,
 
   try {
     const [result] = await db.query(
-      "INSERT INTO products (name, category, price, stock, description, image_url, rating, reviews_count, is_best_seller) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
-      [name, category, parseFloat(price), parseInt(stock), description || "", finalImageUrl, ratingMock, reviewsCountMock, isBestSellerMock]
+      "INSERT INTO products (name, category, price, description, image_url, rating, reviews_count, is_best_seller) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
+      [name, category, parseFloat(price), description || "", finalImageUrl, ratingMock, reviewsCountMock, isBestSellerMock]
     );
 
     res.status(201).json({
@@ -176,7 +178,6 @@ app.post("/api/products", authenticateToken, upload.single("image"), async (req,
         name,
         category,
         price: parseFloat(price),
-        stock: parseInt(stock),
         description,
         image_url: finalImageUrl
       }
@@ -189,10 +190,10 @@ app.post("/api/products", authenticateToken, upload.single("image"), async (req,
 // 5. PUT: Edit Produk (Protected - Admin Only)
 app.put("/api/products/:id", authenticateToken, upload.single("image"), async (req, res) => {
   const { id } = req.params;
-  const { name, category, price, stock, description, image_url } = req.body;
+  const { name, category, price, description, image_url } = req.body;
 
-  if (!name || !category || !price || stock === undefined) {
-    return res.status(400).json({ message: "Data edit wajib belum lengkap." });
+  if (!name || !category || !price) {
+    return res.status(400).json({ message: "Data edit wajib (Nama, Kategori, Harga) belum lengkap." });
   }
 
   try {
@@ -206,14 +207,16 @@ app.put("/api/products/:id", authenticateToken, upload.single("image"), async (r
     let finalImageUrl = currentProduct.image_url;
 
     if (req.file) {
-      finalImageUrl = `http://localhost:${PORT}/uploads/${req.file.filename}`;
+      const host = req.get("host");
+      const protocol = req.protocol;
+      finalImageUrl = `${protocol}://${host}/uploads/${req.file.filename}`;
     } else if (image_url) {
       finalImageUrl = image_url;
     }
 
     await db.query(
-      "UPDATE products SET name = ?, category = ?, price = ?, stock = ?, description = ?, image_url = ? WHERE id = ?",
-      [name, category, parseFloat(price), parseInt(stock), description || "", finalImageUrl, parseInt(id)]
+      "UPDATE products SET name = ?, category = ?, price = ?, description = ?, image_url = ? WHERE id = ?",
+      [name, category, parseFloat(price), description || "", finalImageUrl, parseInt(id)]
     );
 
     res.json({
@@ -223,7 +226,6 @@ app.put("/api/products/:id", authenticateToken, upload.single("image"), async (r
         name,
         category,
         price: parseFloat(price),
-        stock: parseInt(stock),
         description,
         image_url: finalImageUrl
       }

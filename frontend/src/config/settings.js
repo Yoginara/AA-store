@@ -1,9 +1,9 @@
 // Konfigurasi utama untuk toko e-commerce UD ABANG ADIK
+// API Base URL diambil dari environment variable saat build (Vite)
+// - Development: set di frontend/.env → VITE_API_BASE_URL=http://localhost:5000
+// - Production (Vercel): kosongkan agar pakai Vercel Serverless (/api/...)
 
-const isLocalhost = typeof window !== "undefined" && 
-  (window.location.hostname === "localhost" || 
-   window.location.hostname === "127.0.0.1" || 
-   window.location.hostname.startsWith("192.168."));
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "";
 
 export const settings = {
   storeName: "UD ABANG ADIK",
@@ -22,5 +22,5 @@ export const settings = {
     email: "kontak@udabangadik.com",
     established: "1998"
   },
-  apiBaseUrl: isLocalhost ? "http://localhost:5000" : ""
+  apiBaseUrl
 };
