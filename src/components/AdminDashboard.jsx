@@ -29,7 +29,7 @@ export default function AdminDashboard({ token, onLogout, onProductsUpdate, fall
     setIsLoading(true);
     setError("");
     try {
-      const response = await fetch("http://localhost:5000/api/products");
+      const response = await fetch(`${settings.apiBaseUrl}/api/products`);
       if (response.ok) {
         const data = await response.json();
         setProducts(data);
@@ -114,8 +114,8 @@ export default function AdminDashboard({ token, onLogout, onProductsUpdate, fall
     try {
       let response;
       const url = modalMode === "add" 
-        ? "http://localhost:5000/api/products" 
-        : `http://localhost:5000/api/products/${editingProductId}`;
+        ? `${settings.apiBaseUrl}/api/products` 
+        : `${settings.apiBaseUrl}/api/products/${editingProductId}`;
 
       const method = modalMode === "add" ? "POST" : "PUT";
 
@@ -191,7 +191,7 @@ export default function AdminDashboard({ token, onLogout, onProductsUpdate, fall
     if (!window.confirm("Apakah Anda yakin ingin menghapus produk ini dari database?")) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/api/products/${productId}`, {
+      const response = await fetch(`${settings.apiBaseUrl}/api/products/${productId}`, {
         method: "DELETE",
         headers: { "Authorization": `Bearer ${token}` }
       });

@@ -106,7 +106,7 @@ export default function App() {
   // Ambil katalog produk dari Express API Server saat aplikasi dibuka
   const fetchProducts = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/products");
+      const response = await fetch(`${settings.apiBaseUrl}/api/products`);
       if (response.ok) {
         const data = await response.json();
         setProductsList(normalizeProducts(data));

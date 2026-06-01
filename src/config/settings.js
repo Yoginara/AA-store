@@ -15,5 +15,6 @@ export const settings = {
     phone: "+62 813-6064-0668",
     email: "kontak@udabangadik.com",
     established: "1998"
-  }
+  },
+  apiBaseUrl: import.meta.env.DEV ? "http://localhost:5000" : "/_/backend"
 };

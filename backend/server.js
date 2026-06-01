@@ -257,3 +257,5 @@ app.listen(PORT, () => {
     console.log("✔️  [RUNNING MODE] Server terhubung penuh ke database MySQL.");
   }
 });
+
+export default app;
