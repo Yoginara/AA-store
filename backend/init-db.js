@@ -156,17 +156,8 @@ async function initializeDatabase() {
     `);
     console.log("✔️  Tabel 'products' berhasil diverifikasi/dibuat.");
 
-    // 5. Seed Akun Admin Default jika masih kosong
-    const [adminRows] = await connection.query("SELECT * FROM admins");
-    if (adminRows.length === 0) {
-      const hashedPw = await bcrypt.hash("admin123", 10);
-      await connection.query("INSERT INTO admins (username, password) VALUES (?, ?)", ["admin", hashedPw]);
-      console.log("✨ Akun Admin Default Berhasil Ditambahkan!");
-      console.log("   👉 Username : admin");
-      console.log("   👉 Password : admin123");
-    } else {
-      console.log("ℹ️  Tabel 'admins' sudah memiliki data. Seeding admin dilewati.");
-    }
+    // 5. Seed Akun Admin Default ditiadakan untuk alasan keamanan
+    // Admin harus dibuat manual via database console
 
     // 6. Seed Produk Awal jika masih kosong
     const [productRows] = await connection.query("SELECT * FROM products");

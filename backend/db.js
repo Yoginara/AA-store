@@ -86,8 +86,6 @@ let memoryProducts = [
 let useMemoryDb = false;
 let pool = null;
 
-// Password hash default untuk akun: admin / admin123
-const defaultPasswordHash = bcrypt.hashSync("admin123", 10);
 
 try {
   let sslConfig = null;
@@ -163,11 +161,8 @@ const executeMemoryQuery = async (sql, params = []) => {
   const statement = sql.trim().toLowerCase();
   
   // 1. SELECT ADMINS (Login Check)
+  // Mode In-Memory tidak mendukung otentikasi admin untuk alasan keamanan
   if (statement.startsWith("select") && statement.includes("from admins")) {
-    const usernameParam = params[0];
-    if (usernameParam === "admin") {
-      return [[{ id: 1, username: "admin", password: defaultPasswordHash }]];
-    }
     return [[]];
   }
 

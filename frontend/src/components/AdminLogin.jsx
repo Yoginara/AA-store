@@ -35,18 +35,8 @@ export default function AdminLogin({ onLoginSuccess, onBack }) {
       } else {
         setError(data.message || "Gagal masuk. Periksa kembali kredensial Anda.");
       }
-    } catch (err) {
-      console.warn("⚠️  [OFFLINE DETECTED] Express Server luring atau mati. Mengaktifkan verifikasi lokal...");
-      
-      // Fallback otentikasi offline instan
-      if (username === "sitorus" && password === "yogisitampan123") {
-        const mockToken = "mock_jwt_token_ud_abang_adik_dev";
-        const mockAdmin = { id: 1, username: "sitorus" };
-        alert("💡 Masuk menggunakan Mode Offline Fallback (Server API tidak terdeteksi aktif).");
-        onLoginSuccess(mockToken, mockAdmin);
-      } else {
-        setError("Koneksi server gagal, dan kredensial offline tidak cocok (Gunakan username: sitorus & password: yogisitampan123).");
-      }
+      console.warn("⚠️  [OFFLINE DETECTED] Express Server luring atau mati.");
+      setError("Koneksi ke server gagal. Harap pastikan server aktif untuk bisa masuk.");
     } finally {
       setIsLoading(false);
     }
@@ -130,11 +120,7 @@ export default function AdminLogin({ onLoginSuccess, onBack }) {
             />
           </div>
 
-          {/* Tips login credentials info */}
-          <div className="rounded-xl bg-primary-950/60 p-3 border border-primary-850 text-[10px] text-primary-400 font-semibold leading-normal">
-            💡 <strong>Kredensial Default (Testing):</strong>
-            <br />Username: <span className="text-accent-gold font-bold">sitorus</span> | Sandi: <span className="text-accent-gold font-bold">yogisitampan123</span>
-          </div>
+
 
           {/* Submit Action CTA */}
           <button
