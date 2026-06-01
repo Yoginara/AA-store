@@ -1,4 +1,10 @@
 // Konfigurasi utama untuk toko e-commerce UD ABANG ADIK
+
+const isLocalhost = typeof window !== "undefined" && 
+  (window.location.hostname === "localhost" || 
+   window.location.hostname === "127.0.0.1" || 
+   window.location.hostname.startsWith("192.168."));
+
 export const settings = {
   storeName: "UD ABANG ADIK",
   tagline: "Pusat Sepatu, Sandal, dan Tas Sekolah Berkualitas dengan Harga Terjangkau",
@@ -16,5 +22,5 @@ export const settings = {
     email: "kontak@udabangadik.com",
     established: "1998"
   },
-  apiBaseUrl: import.meta.env.DEV ? "http://localhost:5000" : "/_/backend"
+  apiBaseUrl: isLocalhost ? "http://localhost:5000" : "/_/backend"
 };
