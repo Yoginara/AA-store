@@ -44,7 +44,6 @@ export default function ProductGrid({
     filtered = filtered.filter(
       (p) =>
         p.name.toLowerCase().includes(q) ||
-        p.description.toLowerCase().includes(q) ||
         p.category.toLowerCase().includes(q)
     );
   }

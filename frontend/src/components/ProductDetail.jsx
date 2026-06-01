@@ -117,10 +117,7 @@ export default function ProductDetail({ product, onBack, onOpenOfferModal }) {
               )}
             </div>
 
-            {/* Deskripsi */}
-            <p className="text-xs sm:text-sm text-primary-300 leading-relaxed font-medium">
-              {product.description}
-            </p>
+
 
             {/* Ukuran (Khusus Sepatu & Sandal) */}
             {isSizeRequired && (

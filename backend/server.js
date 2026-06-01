@@ -136,7 +136,7 @@ app.get("/api/products/:id", async (req, res) => {
 
 // 4. POST: Tambah Produk Baru (Protected - Admin Only)
 app.post("/api/products", authenticateToken, upload.single("image"), async (req, res) => {
-  const { name, category, price, description, image_url } = req.body;
+  const { name, category, price, image_url } = req.body;
 
   if (!name || !category || !price) {
     return res.status(400).json({ message: "Form wajib (Nama, Kategori, Harga) belum lengkap." });
@@ -158,8 +158,8 @@ app.post("/api/products", authenticateToken, upload.single("image"), async (req,
 
   try {
     const [result] = await db.query(
-      "INSERT INTO products (name, category, price, description, image_url, rating, reviews_count, is_best_seller) VALUES (?, ?, ?, ?, ?, ?, ?, ?)",
-      [name, category, parseFloat(price), description || "", finalImageUrl, ratingMock, reviewsCountMock, isBestSellerMock]
+      "INSERT INTO products (name, category, price, image_url, rating, reviews_count, is_best_seller) VALUES (?, ?, ?, ?, ?, ?, ?)",
+      [name, category, parseFloat(price), finalImageUrl, ratingMock, reviewsCountMock, isBestSellerMock]
     );
 
     res.status(201).json({
@@ -170,7 +170,6 @@ app.post("/api/products", authenticateToken, upload.single("image"), async (req,
         name,
         category,
         price: parseFloat(price),
-        description,
         image_url: finalImageUrl
       }
     });
@@ -182,7 +181,7 @@ app.post("/api/products", authenticateToken, upload.single("image"), async (req,
 // 5. PUT: Edit Produk (Protected - Admin Only)
 app.put("/api/products/:id", authenticateToken, upload.single("image"), async (req, res) => {
   const { id } = req.params;
-  const { name, category, price, description, image_url } = req.body;
+  const { name, category, price, image_url } = req.body;
 
   if (!name || !category || !price) {
     return res.status(400).json({ message: "Data edit wajib (Nama, Kategori, Harga) belum lengkap." });
@@ -207,8 +206,8 @@ app.put("/api/products/:id", authenticateToken, upload.single("image"), async (r
     }
 
     await db.query(
-      "UPDATE products SET name = ?, category = ?, price = ?, description = ?, image_url = ? WHERE id = ?",
-      [name, category, parseFloat(price), description || "", finalImageUrl, parseInt(id)]
+      "UPDATE products SET name = ?, category = ?, price = ?, image_url = ? WHERE id = ?",
+      [name, category, parseFloat(price), finalImageUrl, parseInt(id)]
     );
 
     res.json({
@@ -218,7 +217,6 @@ app.put("/api/products/:id", authenticateToken, upload.single("image"), async (r
         name,
         category,
         price: parseFloat(price),
-        description,
         image_url: finalImageUrl
       }
     });

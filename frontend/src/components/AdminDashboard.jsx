@@ -18,7 +18,7 @@ export default function AdminDashboard({ token, onLogout, onProductsUpdate, fall
   const [formName, setFormName] = useState("");
   const [formCategory, setFormCategory] = useState("sepatu laki-laki");
   const [formPrice, setFormPrice] = useState("");
-  const [formDescription, setFormDescription] = useState("");
+
   const [formImageUrl, setFormImageUrl] = useState("");
   const [formImageFile, setFormImageFile] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -61,7 +61,7 @@ export default function AdminDashboard({ token, onLogout, onProductsUpdate, fall
     setFormName("");
     setFormCategory("sepatu laki-laki");
     setFormPrice("");
-    setFormDescription("");
+
     setFormImageUrl("");
     setFormImageFile(null);
     setError("");
@@ -75,7 +75,7 @@ export default function AdminDashboard({ token, onLogout, onProductsUpdate, fall
     setFormName(product.name);
     setFormCategory(product.category);
     setFormPrice(product.price.toString());
-    setFormDescription(product.description || "");
+
     setFormImageUrl(product.image_url || "");
     setFormImageFile(null);
     setError("");
@@ -99,7 +99,7 @@ export default function AdminDashboard({ token, onLogout, onProductsUpdate, fall
     formData.append("name", formName);
     formData.append("category", formCategory);
     formData.append("price", formPrice);
-    formData.append("description", formDescription);
+
 
     if (formImageFile) {
       formData.append("image", formImageFile);
@@ -146,7 +146,7 @@ export default function AdminDashboard({ token, onLogout, onProductsUpdate, fall
           name: formName,
           category: formCategory,
           price: priceNum,
-          description: formDescription,
+
           image_url: dummyImg,
           rating: 4.5,
           reviews_count: 0,
@@ -164,7 +164,7 @@ export default function AdminDashboard({ token, onLogout, onProductsUpdate, fall
               name: formName,
               category: formCategory,
               price: priceNum,
-              description: formDescription,
+
               image_url: dummyImg
             };
           }
@@ -534,17 +534,7 @@ export default function AdminDashboard({ token, onLogout, onProductsUpdate, fall
                 />
               </div>
 
-              {/* Input Deskripsi */}
-              <div className="space-y-1.5">
-                <label className="text-primary-300">Deskripsi Ringkas</label>
-                <textarea
-                  rows={3}
-                  value={formDescription}
-                  onChange={(e) => setFormDescription(e.target.value)}
-                  placeholder="Masukkan keterangan material bahan, kelebihan, sol luar..."
-                  className="w-full rounded-xl border border-primary-800 bg-primary-950 px-3.5 py-2.5 text-xs text-white focus:border-accent-orange focus:outline-none"
-                />
-              </div>
+
 
               {/* Unggah Gambar Produk (Image Upload) */}
               <div className="space-y-3 p-4 bg-primary-950/60 rounded-2xl border border-primary-800">
