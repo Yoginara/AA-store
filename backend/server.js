@@ -33,16 +33,8 @@ app.use(express.urlencoded({ extended: true }));
 // Sediakan akses statis ke folder uploads gambar
 app.use("/uploads", express.static(uploadDir));
 
-// Konfigurasi Multer untuk penyimpanan berkas lokal
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, uploadDir);
-  },
-  filename: (req, file, cb) => {
-    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-    cb(null, uniqueSuffix + path.extname(file.originalname));
-  }
-});
+// Konfigurasi Multer untuk penyimpanan di memori (Base64) - Cocok untuk Vercel Serverless
+const storage = multer.memoryStorage();
 
 const upload = multer({
   storage: storage,
@@ -150,12 +142,12 @@ app.post("/api/products", authenticateToken, upload.single("image"), async (req,
     return res.status(400).json({ message: "Form wajib (Nama, Kategori, Harga) belum lengkap." });
   }
 
-  // Tentukan URL gambar: unggah berkas lokal atau fallback teks input tautan
+  // Tentukan URL gambar: unggah Base64 atau fallback teks input tautan
   let finalImageUrl = "https://images.unsplash.com/photo-1542291026-7eec264c27ff?q=80&w=600"; // Fallback awal
   if (req.file) {
-    const host = req.get("host");
-    const protocol = req.protocol;
-    finalImageUrl = `${protocol}://${host}/uploads/${req.file.filename}`;
+    const base64Image = req.file.buffer.toString("base64");
+    const mimeType = req.file.mimetype;
+    finalImageUrl = `data:${mimeType};base64,${base64Image}`;
   } else if (image_url) {
     finalImageUrl = image_url;
   }
@@ -207,9 +199,9 @@ app.put("/api/products/:id", authenticateToken, upload.single("image"), async (r
     let finalImageUrl = currentProduct.image_url;
 
     if (req.file) {
-      const host = req.get("host");
-      const protocol = req.protocol;
-      finalImageUrl = `${protocol}://${host}/uploads/${req.file.filename}`;
+      const base64Image = req.file.buffer.toString("base64");
+      const mimeType = req.file.mimetype;
+      finalImageUrl = `data:${mimeType};base64,${base64Image}`;
     } else if (image_url) {
       finalImageUrl = image_url;
     }
