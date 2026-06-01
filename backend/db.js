@@ -91,30 +91,47 @@ const defaultPasswordHash = bcrypt.hashSync("admin123", 10);
 
 try {
   let sslConfig = null;
-  const caFileName = process.env.DB_CA_PATH;
-  if (caFileName) {
-    let certData = null;
-    try {
-      const currentDir = path.dirname(fileURLToPath(import.meta.url));
-      certData = fs.readFileSync(path.join(currentDir, caFileName));
-    } catch (e) {
+
+  // Prioritas 1: DB_CA_CERT (env variable langsung — untuk Vercel Serverless)
+  // Prioritas 2: DB_CA_PATH (file lokal — untuk development)
+  if (process.env.DB_CA_CERT) {
+    // Bisa berupa PEM string langsung atau base64-encoded
+    let certData = process.env.DB_CA_CERT;
+    // Deteksi jika base64: tidak mengandung newline atau "-----BEGIN"
+    if (!certData.includes("-----BEGIN") && !certData.includes("\n")) {
+      certData = Buffer.from(certData, "base64").toString("utf-8");
+    }
+    sslConfig = {
+      ca: certData,
+      minVersion: "TLSv1.2",
+      rejectUnauthorized: true
+    };
+    console.log("🔐 [SSL] Menggunakan CA cert dari environment variable DB_CA_CERT");
+  } else {
+    const caFileName = process.env.DB_CA_PATH;
+    if (caFileName) {
+      let certData = null;
       try {
-        certData = fs.readFileSync(path.join(process.cwd(), caFileName));
-      } catch (e2) {
+        const currentDir = path.dirname(fileURLToPath(import.meta.url));
+        certData = fs.readFileSync(path.join(currentDir, caFileName));
+      } catch (e) {
         try {
-          certData = fs.readFileSync(caFileName);
-        } catch (e3) {
-          console.warn("⚠️ [DATABASE CA cert load error]:", e3.message);
+          certData = fs.readFileSync(path.join(process.cwd(), caFileName));
+        } catch (e2) {
+          try {
+            certData = fs.readFileSync(caFileName);
+          } catch (e3) {
+            console.warn("⚠️ [DATABASE CA cert load error]:", e3.message);
+          }
         }
       }
-    }
-
-    if (certData) {
-      sslConfig = {
-        ca: certData,
-        minVersion: "TLSv1.2",
-        rejectUnauthorized: true
-      };
+      if (certData) {
+        sslConfig = {
+          ca: certData,
+          minVersion: "TLSv1.2",
+          rejectUnauthorized: true
+        };
+      }
     }
   }
 
