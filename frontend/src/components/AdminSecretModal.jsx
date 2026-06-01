@@ -9,7 +9,10 @@ export default function AdminSecretModal({ isOpen, onClose, onSuccess }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (code === "123456") {
+    // Mengambil kode dari Environment Variable (.env) agar tidak terlihat di GitHub
+    const correctCode = import.meta.env.VITE_ADMIN_SECRET_CODE;
+    
+    if (code === correctCode) {
       setError("");
       setCode("");
       onSuccess();
