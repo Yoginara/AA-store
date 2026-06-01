@@ -19,11 +19,20 @@
       "dest": "/api/index.js"
     },
     {
-      "handle": "filesystem"
+      "src": "/assets/(.*)",
+      "dest": "/frontend/assets/$1"
+    },
+    {
+      "src": "/(favicon\\.(ico|svg))",
+      "dest": "/frontend/$1"
+    },
+    {
+      "src": "/(icons\\.svg)",
+      "dest": "/frontend/$1"
     },
     {
       "src": "/(.*)",
-      "dest": "/index.html"
+      "dest": "/frontend/index.html"
     }
   ]
 }
