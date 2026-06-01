@@ -665,7 +665,14 @@ export default function App() {
         <div className="pt-4 text-[10px] text-primary-500 border-t border-primary-950 flex items-center justify-center gap-2">
           <span>© {new Date().getFullYear()} UD ABANG ADIK.</span>
           <button
-            onClick={() => setCurrentPage("admin-login")}
+            onClick={() => {
+              const code = window.prompt("Masukkan kode akses rahasia:");
+              if (code === "123456") {
+                setCurrentPage("admin-login");
+              } else if (code !== null) {
+                alert("Akses Ditolak! Kode salah.");
+              }
+            }}
             className="text-primary-800 hover:text-accent-orange transition-colors cursor-pointer text-[10px]"
             title="Portal Admin"
           >
