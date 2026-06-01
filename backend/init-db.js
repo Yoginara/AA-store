@@ -1,6 +1,9 @@
 import mysql from "mysql2/promise";
 import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 dotenv.config();
 
@@ -84,17 +87,45 @@ async function initializeDatabase() {
 
   let connection;
   try {
-    // 1. Hubungkan ke MySQL Server tanpa memilih database (untuk membuat DB jika belum ada)
+    let sslConfig = null;
+    const caFileName = process.env.DB_CA_PATH;
+    if (caFileName) {
+      let certData = null;
+      try {
+        const currentDir = path.dirname(fileURLToPath(import.meta.url));
+        certData = fs.readFileSync(path.join(currentDir, caFileName));
+      } catch (e) {
+        try {
+          certData = fs.readFileSync(path.join(process.cwd(), caFileName));
+        } catch (e2) {
+          try {
+            certData = fs.readFileSync(caFileName);
+          } catch (e3) {
+            console.warn("⚠️ [CA cert load error]:", e3.message);
+          }
+        }
+      }
+
+      if (certData) {
+        sslConfig = {
+          ca: certData,
+          minVersion: "TLSv1.2",
+          rejectUnauthorized: true
+        };
+      }
+    }
+
+    // Hubungkan langsung ke Database TiDB Cloud / MySQL Server
     connection = await mysql.createConnection({
       host: DB_HOST,
+      port: parseInt(process.env.DB_PORT || "3306"),
       user: DB_USER,
-      password: DB_PASSWORD
+      password: DB_PASSWORD,
+      database: DB_NAME,
+      ssl: sslConfig
     });
 
-    // 2. Buat database
-    await connection.query(`CREATE DATABASE IF NOT EXISTS \`${DB_NAME}\`;`);
-    console.log(`✔️  Database '${DB_NAME}' berhasil dibuat atau sudah tersedia.`);
-    await connection.query(`USE \`${DB_NAME}\`;`);
+    console.log(`✔️  Berhasil terhubung ke database '${DB_NAME}' via SSL.`);
 
     // 3. Buat tabel 'admins'
     await connection.query(`

@@ -1,6 +1,9 @@
 import mysql from "mysql2/promise";
 import dotenv from "dotenv";
 import bcrypt from "bcryptjs";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
 dotenv.config();
 
@@ -87,12 +90,42 @@ let pool = null;
 const defaultPasswordHash = bcrypt.hashSync("admin123", 10);
 
 try {
+  let sslConfig = null;
+  const caFileName = process.env.DB_CA_PATH;
+  if (caFileName) {
+    let certData = null;
+    try {
+      const currentDir = path.dirname(fileURLToPath(import.meta.url));
+      certData = fs.readFileSync(path.join(currentDir, caFileName));
+    } catch (e) {
+      try {
+        certData = fs.readFileSync(path.join(process.cwd(), caFileName));
+      } catch (e2) {
+        try {
+          certData = fs.readFileSync(caFileName);
+        } catch (e3) {
+          console.warn("⚠️ [DATABASE CA cert load error]:", e3.message);
+        }
+      }
+    }
+
+    if (certData) {
+      sslConfig = {
+        ca: certData,
+        minVersion: "TLSv1.2",
+        rejectUnauthorized: true
+      };
+    }
+  }
+
   // Hubungkan ke MySQL menggunakan driver pool
   pool = mysql.createPool({
     host: process.env.DB_HOST || "localhost",
+    port: parseInt(process.env.DB_PORT || "3306"),
     user: process.env.DB_USER || "root",
     password: process.env.DB_PASSWORD || "",
     database: process.env.DB_NAME || "ud_abang_adik",
+    ssl: sslConfig,
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
@@ -100,11 +133,10 @@ try {
 
   // Uji koneksi awal
   const conn = await pool.getConnection();
-  console.log("✔️ [DATABASE SUCCESS] Berhasil terhubung ke database MySQL.");
+  console.log("✔️ [DATABASE SUCCESS] Berhasil terhubung ke TiDB Cloud Database.");
   conn.release();
 } catch (err) {
-  console.warn("⚠️ [DATABASE WARNING] Gagal terhubung ke MySQL Server.");
-  console.warn("   Koneksi MySQL bermasalah atau belum dikonfigurasi.");
+  console.warn("⚠️ [DATABASE WARNING] Gagal terhubung ke TiDB Cloud / MySQL Server:", err.message);
   console.warn("   Mengaktifkan Sistem Penyimpanan Sementara In-Memory Fallback...");
   useMemoryDb = true;
 }
