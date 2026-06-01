@@ -3,6 +3,7 @@ import ProductCard from "./components/ProductCard";
 import OfferModal from "./components/OfferModal";
 import AdminLogin from "./components/AdminLogin";
 import AdminDashboard from "./components/AdminDashboard";
+import AdminSecretModal from "./components/AdminSecretModal";
 import { products as staticProducts } from "./data/products";
 import { settings } from "./config/settings";
 import { Award, TrendingUp, HeartHandshake, MessageSquare, ShieldCheck, Tag, MapPin, Clock, Phone, ShoppingBag, ArrowRight, ChevronRight, User, Heart, Smile, Footprints, Sparkles, Backpack } from "lucide-react";
@@ -22,6 +23,9 @@ export default function App() {
   // State Modal Penawaran Tawar Harga
   const [isOfferModalOpen, setIsOfferModalOpen] = useState(false);
   const [modalProduct, setModalProduct] = useState(null);
+
+  // State Modal Akses Rahasia Admin
+  const [isSecretModalOpen, setIsSecretModalOpen] = useState(false);
 
   // Penormalisasi data produk dari server/API ke skema storefront
   const normalizeProducts = (data) => {
@@ -665,14 +669,7 @@ export default function App() {
         <div className="pt-4 text-[10px] text-primary-500 border-t border-primary-950 flex items-center justify-center gap-2">
           <span>© {new Date().getFullYear()} UD ABANG ADIK.</span>
           <button
-            onClick={() => {
-              const code = window.prompt("Masukkan kode akses rahasia:");
-              if (code === "123456") {
-                setCurrentPage("admin-login");
-              } else if (code !== null) {
-                alert("Akses Ditolak! Kode salah.");
-              }
-            }}
+            onClick={() => setIsSecretModalOpen(true)}
             className="text-primary-800 hover:text-accent-orange transition-colors cursor-pointer text-[10px]"
             title="Portal Admin"
           >
@@ -686,6 +683,17 @@ export default function App() {
         isOpen={isOfferModalOpen}
         onClose={() => setIsOfferModalOpen(false)}
         product={modalProduct}
+      />
+
+      {/* 6. Modal Akses Rahasia Admin */}
+      <AdminSecretModal
+        isOpen={isSecretModalOpen}
+        onClose={() => setIsSecretModalOpen(false)}
+        onSuccess={() => {
+          setIsSecretModalOpen(false);
+          setCurrentPage("admin-login");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }}
       />
 
     </div>
