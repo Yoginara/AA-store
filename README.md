@@ -21,7 +21,6 @@ AA-store/
 │   ├── db.js          ← Koneksi MySQL + In-Memory fallback
 │   ├── init-db.js     ← Inisialisasi tabel & seeding data
 │   ├── schema.sql     ← Skema tabel MySQL
-│   ├── uploads/       ← Gambar produk yang diunggah
 │   ├── package.json
 │   └── .env.example
 │
@@ -34,7 +33,17 @@ AA-store/
 
 ---
 
-## 🚀 Cara Menjalankan (Development Lokal)
+## 🚀 Fitur Utama
+
+- **Katalog Produk Dinamis**: Data diambil secara realtime dari TiDB.
+- **Admin Dashboard**: Portal admin aman dengan JWT.
+- **Tawar Harga via WhatsApp**: Pembeli dapat menawar harga produk dengan langsung terhubung ke WhatsApp penjual.
+- **Penyimpanan Base64**: Mengingat sifat _Read-Only_ serverless Vercel, gambar produk kini dikonversi menjadi format Base64 dan disimpan langsung ke dalam tabel database.
+- **Keamanan Ganda (Double Security)**: Halaman admin dilindungi oleh prompt kode akses rahasia (Secret Code) di frontend sebelum masuk ke halaman form login (Backend).
+
+---
+
+## 💻 Cara Menjalankan (Development Lokal)
 
 ### 1. Clone & Install Dependencies
 
@@ -51,7 +60,7 @@ npm run install:all
 ```bash
 cd backend
 cp .env.example .env
-# Edit .env dengan kredensial database Anda
+# Edit .env dengan kredensial TiDB Cloud Anda
 ```
 
 ### 3. Inisialisasi Database
@@ -61,9 +70,7 @@ npm run init-db
 # atau: cd backend && node init-db.js
 ```
 
-**Login Admin Default:**
-- Username: `admin`
-- Password: `admin123`
+> **Catatan Keamanan:** Kami telah menghapus penambahan (seeding) otomatis akun Admin default demi alasan keamanan. Silakan tambahkan user admin pertama Anda secara manual menggunakan klien database (misal DBeaver atau TiDB Cloud Console). Sandi harus di-hash menggunakan `bcrypt`.
 
 ### 4. Konfigurasi Frontend
 
@@ -71,6 +78,7 @@ npm run init-db
 cd frontend
 cp .env.example .env
 # Isi VITE_API_BASE_URL=http://localhost:5000
+# Isi VITE_ADMIN_SECRET_CODE=Pudan2004 (atau kode rahasia lain untuk gembok admin)
 ```
 
 ### 5. Jalankan Servers
@@ -91,10 +99,10 @@ Buka `http://localhost:5173` di browser.
 
 | Method | Endpoint | Auth | Keterangan |
 |--------|----------|------|------------|
-| POST | `/api/auth/login` | ❌ | Login admin |
+| POST | `/api/auth/login` | ❌ | Login admin (verifikasi bcrypt) |
 | GET | `/api/products` | ❌ | Ambil semua produk |
 | GET | `/api/products/:id` | ❌ | Detail produk |
-| POST | `/api/products` | ✅ JWT | Tambah produk baru |
+| POST | `/api/products` | ✅ JWT | Tambah produk baru (Upload Base64) |
 | PUT | `/api/products/:id` | ✅ JWT | Edit produk |
 | DELETE | `/api/products/:id` | ✅ JWT | Hapus produk |
 
@@ -102,23 +110,16 @@ Buka `http://localhost:5173` di browser.
 
 ## ☁️ Deploy
 
-### Frontend + API (Vercel)
+Proyek ini telah dikonfigurasi penuh untuk mendukung arsitektur *Monorepo Serverless* di **Vercel** menggunakan `vercel.json` dan folder `api/`. 
 
 ```bash
-# Build frontend
-npm run build
-
-# Push ke GitHub → Vercel akan auto-deploy
-git push
+# Cara cepat deploy ke Vercel
+npx vercel --prod
 ```
 
-### Backend Mandiri (Railway / Render)
-
-```bash
-cd backend
-# Set env variables di dashboard Railway/Render
-# Lalu deploy dari GitHub
-```
+### Pastikan Anda Mendaftarkan Environment Variables di Vercel:
+- Variabel Backend: `DB_HOST`, `DB_PORT`, `DB_USER`, `DB_PASSWORD`, `DB_NAME`, `JWT_SECRET`, `DB_CA_CERT`
+- Variabel Frontend: `VITE_ADMIN_SECRET_CODE`
 
 ---
 
@@ -130,5 +131,6 @@ cd backend
 | Backend | Node.js, Express 4 |
 | Database | TiDB Cloud (MySQL-compatible) |
 | Auth | JWT (jsonwebtoken) + bcryptjs |
-| Upload | Multer |
+| Keamanan | Frontend Secret Gate Prompt |
+| Storage | DB Storage (Base64 MEDIUMTEXT) |
 | Deploy | Vercel (Frontend + Serverless API) |
