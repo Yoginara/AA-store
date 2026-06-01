@@ -95,7 +95,14 @@ export default function Footer({ setSelectedCategory, setCurrentPage, setSelecte
           <div className="flex items-center gap-2">
             <span>© {new Date().getFullYear()} UD ABANG ADIK. Semua Hak Dilindungi.</span>
             <button
-              onClick={() => handleNavClick("admin-login")}
+              onClick={() => {
+                const code = window.prompt("Masukkan kode akses rahasia:");
+                if (code === "123456") {
+                  handleNavClick("admin-login");
+                } else if (code !== null) {
+                  alert("Akses Ditolak! Kode salah.");
+                }
+              }}
               className="text-primary-800 hover:text-accent-orange transition-colors cursor-pointer text-xs"
               title="Portal Admin"
             >
