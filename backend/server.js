@@ -21,8 +21,12 @@ const __dirname = path.dirname(__filename);
 
 // Pastikan folder 'uploads' selalu tersedia untuk menampung berkas unggahan
 const uploadDir = path.join(__dirname, "uploads");
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
+try {
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+  }
+} catch (e) {
+  // Abaikan error EROFS pada environment read-only Vercel Serverless
 }
 
 // Konfigurasi Middlewares
@@ -240,14 +244,16 @@ app.delete("/api/products/:id", authenticateToken, async (req, res) => {
   }
 });
 
-// Booting Express Server
-app.listen(PORT, () => {
-  console.log(`🚀 [SERVER RUNNING] Express API Server mengudara di http://localhost:${PORT}`);
-  if (db.isFallbackActive()) {
-    console.log("⚠️  [RUNNING MODE] Server berjalan dalam mode In-Memory Database Fallback.");
-  } else {
-    console.log("✔️  [RUNNING MODE] Server terhubung penuh ke database MySQL.");
-  }
-});
+// Booting Express Server (hanya saat running lokal / standalone, bukan di Vercel serverless)
+if (!process.env.VERCEL) {
+  app.listen(PORT, () => {
+    console.log(`🚀 [SERVER RUNNING] Express API Server mengudara di http://localhost:${PORT}`);
+    if (db.isFallbackActive()) {
+      console.log("⚠️  [RUNNING MODE] Server berjalan dalam mode In-Memory Database Fallback.");
+    } else {
+      console.log("✔️  [RUNNING MODE] Server terhubung penuh ke database MySQL.");
+    }
+  });
+}
 
 export default app;
