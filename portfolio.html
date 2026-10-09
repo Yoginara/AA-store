@@ -1,0 +1,711 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portfolio Case Study - UD ABANG ADIK (AA-Store) | Yoginara</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+    :root {
+      --primary: #0f172a;
+      --primary-light: #1e293b;
+      --accent: #ea580c;
+      --accent-light: #fff7ed;
+      --accent-gold: #d97706;
+      --accent-emerald: #059669;
+      --accent-blue: #2563eb;
+      --text-main: #1e293b;
+      --text-muted: #64748b;
+      --text-light: #94a3b8;
+      --border: #e2e8f0;
+      --bg-card: #f8fafc;
+      --bg-white: #ffffff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      color: var(--text-main);
+      background-color: #f1f5f9;
+      line-height: 1.45;
+      font-size: 12px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    .page-container {
+      width: 210mm;
+      height: 297mm;
+      max-height: 297mm;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 12mm 16mm;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .page-content {
+      flex: 1;
+    }
+
+    .page-break {
+      page-break-before: always;
+      break-before: page;
+    }
+
+    @media print {
+      body {
+        background: #ffffff;
+      }
+      .page-container {
+        width: 100%;
+        height: 297mm;
+        max-height: 297mm;
+        padding: 10mm 14mm;
+        margin: 0;
+        box-shadow: none;
+        overflow: hidden;
+      }
+      .no-print {
+        display: none !important;
+      }
+      .page-break {
+        page-break-before: always;
+        break-before: page;
+      }
+      @page {
+        size: A4 portrait;
+        margin: 0;
+      }
+    }
+
+    /* Header Styles */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      border-bottom: 2px solid var(--primary);
+      padding-bottom: 8px;
+      margin-bottom: 12px;
+    }
+
+    .author-name {
+      font-size: 22px;
+      font-weight: 800;
+      color: var(--primary);
+      letter-spacing: -0.5px;
+      line-height: 1.1;
+    }
+
+    .author-role {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--accent);
+      margin-top: 2px;
+    }
+
+    .contact-info {
+      text-align: right;
+      font-size: 10.5px;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    .contact-info a {
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+
+    /* Project Banner */
+    .project-banner {
+      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+      color: #ffffff;
+      padding: 14px 18px;
+      border-radius: 10px;
+      margin-bottom: 12px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .project-banner::after {
+      content: '';
+      position: absolute;
+      right: -25px;
+      top: -25px;
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle, rgba(234, 88, 12, 0.25) 0%, rgba(234, 88, 12, 0) 70%);
+      border-radius: 50%;
+    }
+
+    .badge-category {
+      display: inline-block;
+      font-size: 9.5px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      background: rgba(234, 88, 12, 0.2);
+      color: #fb923c;
+      padding: 2px 8px;
+      border-radius: 12px;
+      border: 1px solid rgba(251, 146, 60, 0.3);
+      margin-bottom: 6px;
+    }
+
+    .project-title {
+      font-size: 20px;
+      font-weight: 800;
+      color: #ffffff;
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+
+    .project-title span {
+      color: #fbbf24;
+    }
+
+    .project-tagline {
+      font-size: 11.5px;
+      color: #cbd5e1;
+      max-width: 95%;
+      line-height: 1.4;
+    }
+
+    /* Tech Stack Pills */
+    .tech-stack-bar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 10px;
+    }
+
+    .tech-pill {
+      font-size: 9.5px;
+      font-weight: 600;
+      background: rgba(255, 255, 255, 0.1);
+      color: #e2e8f0;
+      padding: 2px 7px;
+      border-radius: 5px;
+      border: 1px solid rgba(255, 255, 255, 0.15);
+    }
+
+    /* Section Styles */
+    .section {
+      margin-bottom: 12px;
+    }
+
+    .section-title {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--primary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 8px;
+      border-bottom: 1.5px solid var(--border);
+      padding-bottom: 3px;
+    }
+
+    .section-title-icon {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 20px;
+      height: 20px;
+      background: var(--accent);
+      color: #ffffff;
+      border-radius: 5px;
+      font-size: 10px;
+      font-weight: bold;
+    }
+
+    /* Grids */
+    .grid-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 8px;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 10px 12px;
+    }
+
+    .card-title {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 3px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .card-text {
+      font-size: 10.5px;
+      color: var(--text-main);
+      line-height: 1.45;
+    }
+
+    /* Key Metrics */
+    .metric-box {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px;
+      text-align: center;
+      border-top: 3px solid var(--accent);
+    }
+
+    .metric-val {
+      font-size: 16px;
+      font-weight: 800;
+      color: var(--primary);
+    }
+
+    .metric-label {
+      font-size: 9.5px;
+      color: var(--text-muted);
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    /* Challenge - Solution Cards */
+    .engineering-card {
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-left: 3.5px solid var(--accent-blue);
+      border-radius: 6px;
+      padding: 7px 10px;
+      margin-bottom: 6px;
+    }
+
+    .engineering-title {
+      font-size: 11.5px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 3px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .tag-blue {
+      font-size: 8.5px;
+      font-weight: 700;
+      background: #dbeafe;
+      color: #1e40af;
+      padding: 1.5px 5px;
+      border-radius: 3px;
+    }
+
+    .problem-desc {
+      font-size: 10px;
+      color: #b91c1c;
+      margin-bottom: 2px;
+      line-height: 1.35;
+    }
+
+    .solution-desc {
+      font-size: 10px;
+      color: #15803d;
+      line-height: 1.35;
+    }
+
+    /* Visual Architecture Flow */
+    .arch-flow-container {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr auto 1fr;
+      align-items: center;
+      gap: 6px;
+      background: #0f172a;
+      border-radius: 8px;
+      padding: 10px 12px;
+      margin-bottom: 10px;
+      color: #ffffff;
+    }
+
+    .arch-node {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 6px;
+      padding: 6px 8px;
+      text-align: center;
+    }
+
+    .arch-node-title {
+      font-size: 10px;
+      font-weight: 700;
+      color: #fb923c;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .arch-node-desc {
+      font-size: 8.5px;
+      color: #94a3b8;
+      margin-top: 2px;
+    }
+
+    .arch-arrow {
+      color: #64748b;
+      font-size: 12px;
+      font-weight: bold;
+      text-align: center;
+    }
+
+    .arch-db-sub {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 4px;
+      margin-top: 3px;
+    }
+
+    .arch-pill-db {
+      font-size: 8px;
+      background: #059669;
+      color: #ffffff;
+      padding: 2px;
+      border-radius: 3px;
+      font-weight: 600;
+    }
+
+    .arch-pill-fallback {
+      font-size: 8px;
+      background: #d97706;
+      color: #ffffff;
+      padding: 2px;
+      border-radius: 3px;
+      font-weight: 600;
+    }
+
+    /* CV Bullets Box */
+    .cv-box {
+      border-radius: 8px;
+      padding: 8px 12px;
+      margin-bottom: 7px;
+    }
+
+    .cv-box-title {
+      font-size: 11px;
+      font-weight: 800;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .bullet-list {
+      list-style-type: none;
+      padding-left: 0;
+    }
+
+    .bullet-list li {
+      position: relative;
+      padding-left: 12px;
+      font-size: 10px;
+      color: var(--text-main);
+      margin-bottom: 3.5px;
+      line-height: 1.4;
+    }
+
+    .bullet-list li::before {
+      content: '▪';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-weight: bold;
+    }
+
+    /* Footer */
+    .footer {
+      border-top: 1px solid var(--border);
+      padding-top: 6px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 9.5px;
+      color: var(--text-light);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ==================== PAGE 1: OVERVIEW & FEATURES ==================== -->
+  <div class="page-container">
+    <div class="page-content">
+      
+      <!-- HEADER -->
+      <header class="header">
+        <div>
+          <div class="author-name">YOGINARA</div>
+          <div class="author-role">Full-Stack Web Developer &bull; Software Engineer</div>
+        </div>
+        <div class="contact-info">
+          <div>Email: <a href="mailto:yoginara2004@gmail.com">yoginara2004@gmail.com</a></div>
+          <div>GitHub: <a href="https://github.com/Yoginara" target="_blank">github.com/Yoginara</a></div>
+          <div>Repository: <a href="https://github.com/Yoginara/AA-store" target="_blank">github.com/Yoginara/AA-store</a></div>
+        </div>
+      </header>
+
+      <!-- PROJECT HERO BANNER -->
+      <div class="project-banner">
+        <div class="badge-category">Case Study &bull; Production E-Commerce Monorepo</div>
+        <h1 class="project-title">UD ABANG ADIK <span>(AA-Store)</span></h1>
+        <p class="project-tagline">
+          Platform katalog digital dan sistem penawaran interaktif berbasis serverless monorepo untuk digitalisasi UMKM ritel tradisional (Pasar Horas, Pematangsiantar).
+        </p>
+        <div class="tech-stack-bar">
+          <span class="tech-pill">React 19</span>
+          <span class="tech-pill">Vite 8</span>
+          <span class="tech-pill">Tailwind CSS 4</span>
+          <span class="tech-pill">Node.js</span>
+          <span class="tech-pill">Express.js 4</span>
+          <span class="tech-pill">TiDB Cloud (Distributed SQL)</span>
+          <span class="tech-pill">JWT &amp; bcrypt</span>
+          <span class="tech-pill">Vercel Serverless</span>
+          <span class="tech-pill">Zero-Cost Cloud</span>
+        </div>
+      </div>
+
+      <!-- EXECUTIVE METRICS -->
+      <div class="section">
+        <div class="grid-3">
+          <div class="metric-box">
+            <div class="metric-val" style="color: var(--accent-emerald);">$0 / Bulan</div>
+            <div class="metric-label">Biaya Infrastruktur (Zero-Cost)</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val" style="color: var(--accent-blue);">100% Uptime</div>
+            <div class="metric-label">Fault-Tolerant Fallback System</div>
+          </div>
+          <div class="metric-box">
+            <div class="metric-val" style="color: var(--accent);">&lt; 200 ms</div>
+            <div class="metric-label">Latency API Katalog Cepat</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LATAR BELAKANG & TANTANGAN BISNIS -->
+      <div class="section">
+        <div class="section-title">
+          <span class="section-title-icon">01</span>
+          Latar Belakang &amp; Tantangan Bisnis
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title">🏪 Konteks &amp; Budaya Bisnis Lokal</div>
+            <p class="card-text">
+              <strong>UD ABANG ADIK</strong> adalah toko sepatu, sandal, dan tas sekolah di Pasar Horas, Pematangsiantar yang berdiri sejak 1998. Transaksi tradisional sangat bertumpu pada <em>tawar-menawar</em> dan hubungan akrab dengan pedagang, hal yang kerap hilang pada sistem e-commerce keranjang belanja konvensional.
+            </p>
+          </div>
+          <div class="card">
+            <div class="card-title">🎯 Tantangan Rekayasa &amp; Operasional</div>
+            <p class="card-text">
+              Digitalisasi harus mempertahankan interaksi tawar-menawar tanpa biaya server bulanan (*Zero-Cost Constraint*). Sistem harus tetap beroperasi mulus (*high availability*) meskipun terjadi gangguan jaringan atau database di pasar tradisional.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- INOVASI FITUR UTAMA -->
+      <div class="section">
+        <div class="section-title">
+          <span class="section-title-icon">02</span>
+          Inovasi Fitur Utama
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-title" style="color: var(--accent);">⚡ Dynamic BargainMeter</div>
+            <p class="card-text">
+              Algoritma interaktif yang mengkalkulasi rasio diskon harga tawar terhadap harga resmi retail. Menyajikan visual meter dan <em>advice</em> psikologis secara instan (<em>Sadis, Sengit, Bersahabat, Wajar, Dermawan</em>) sebelum diajukan.
+            </p>
+          </div>
+          <div class="card">
+            <div class="card-title" style="color: var(--accent-emerald);">💬 WhatsApp Conversational Checkout</div>
+            <p class="card-text">
+              Konversi tawaran menjadi payload pesan WhatsApp Click-to-Chat otomatis berisi detail nama produk, ukuran kaki, kuantitas, dan harga tawar. Menghilangkan friksi checkout dan langsung menghubungkan pembeli ke penjual.
+            </p>
+          </div>
+          <div class="card">
+            <div class="card-title" style="color: var(--accent-blue);">🔐 Double Gatekeeper Security</div>
+            <p class="card-text">
+              Perlindungan akses admin dua lapis: gerbang modal kode rahasia di client-side (*front-gate modal*) sebelum form login backend dibuka, diperkuat oleh validasi JWT dan enkripsi password <em>bcrypt</em> di server.
+            </p>
+          </div>
+          <div class="card">
+            <div class="card-title" style="color: var(--accent-gold);">📦 Real-Time Admin Inventory Portal</div>
+            <p class="card-text">
+              Dashboard manajemen inventaris penuh (CRUD) dengan unggah gambar instan, manajemen kategori, filter status produk terlaris (*best seller*), serta sinkronisasi dinamis ke TiDB Cloud.
+            </p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- FOOTER PAGE 1 -->
+    <footer class="footer">
+      <span>Portfolio Case Study &bull; UD ABANG ADIK (AA-Store)</span>
+      <span>Halaman 1 dari 2 &bull; Yoginara</span>
+    </footer>
+  </div>
+
+  <!-- PAGE BREAK -->
+  <div class="page-break"></div>
+
+  <!-- ==================== PAGE 2: ARCHITECTURE, CHALLENGES, CV BULLETS ==================== -->
+  <div class="page-container">
+    <div class="page-content">
+
+      <!-- HEADER PAGE 2 -->
+      <header class="header">
+        <div>
+          <div class="author-name">YOGINARA</div>
+          <div class="author-role">Technical Case Study &amp; Engineering Decisions</div>
+        </div>
+        <div class="contact-info">
+          <div>Project: <strong>UD ABANG ADIK (AA-Store)</strong></div>
+          <div>Stack: <strong>React 19 &bull; Express &bull; TiDB &bull; Vercel</strong></div>
+        </div>
+      </header>
+
+      <!-- SYSTEM ARCHITECTURE FLOW -->
+      <div class="section">
+        <div class="section-title">
+          <span class="section-title-icon">03</span>
+          Arsitektur Sistem &amp; Alur Data Monorepo
+        </div>
+        <div class="arch-flow-container">
+          <div class="arch-node">
+            <div class="arch-node-title">Frontend Client</div>
+            <div class="arch-node-desc">React 19 + Vite 8<br>Tailwind CSS 4</div>
+          </div>
+          <div class="arch-arrow">&#10132;</div>
+          <div class="arch-node">
+            <div class="arch-node-title">Serverless API</div>
+            <div class="arch-node-desc">Express Adapter<br>Vercel Node Runtime</div>
+          </div>
+          <div class="arch-arrow">&#10132;</div>
+          <div class="arch-node">
+            <div class="arch-node-title">Data Storage</div>
+            <div class="arch-db-sub">
+              <span class="arch-pill-db">TiDB Cloud (TLS)</span>
+              <span class="arch-pill-fallback">In-Memory Mock</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DEEP ENGINEERING CHALLENGES -->
+      <div class="section">
+        <div class="section-title">
+          <span class="section-title-icon">04</span>
+          Tantangan Rekayasa &amp; Solusi Teknis
+        </div>
+
+        <div class="engineering-card">
+          <div class="engineering-title">
+            <span>1. Menembus Batasan Read-Only Filesystem (Vercel EROFS)</span>
+            <span class="tag-blue">Serverless Storage</span>
+          </div>
+          <div class="problem-desc">
+            <strong>Tantangan:</strong> Serverless runtime Vercel bersifat ephemeral dan melarang penulisan ke disk (error <code>EROFS</code> pada upload disk tradisional).
+          </div>
+          <div class="solution-desc">
+            <strong>Solusi:</strong> Menggunakan <code>multer.memoryStorage()</code> dan mengonversi buffer gambar ke format Base64 Data URI, disimpan langsung ke kolom <code>MEDIUMTEXT</code> database TiDB. Menghilangkan kebutuhan cloud storage berbayar (AWS S3) dan menghemat biaya hingga 100%.
+          </div>
+        </div>
+
+        <div class="engineering-card">
+          <div class="engineering-title">
+            <span>2. Graceful Degradation: Circuit Breaker &amp; In-Memory Fallback</span>
+            <span class="tag-blue">High Availability</span>
+          </div>
+          <div class="problem-desc">
+            <strong>Tantangan:</strong> Fluktuasi koneksi database cloud atau uji coba lokal tanpa internet dapat menyebabkan server mengalami crash (500 Error) dan katalog mati.
+          </div>
+          <div class="solution-desc">
+            <strong>Solusi:</strong> Membangun emulator SQL in-memory (<code>executeMemoryQuery</code>) di <code>db.js</code> sebagai fallback otomatis. Jika koneksi TiDB terputus, backend secara mulus beralih ke in-memory store tanpa memutus proses pengguna (100% uptime).
+          </div>
+        </div>
+
+        <div class="engineering-card">
+          <div class="engineering-title">
+            <span>3. TLS/SSL Handshake &amp; Monorepo SPA Routing di Serverless</span>
+            <span class="tag-blue">Cloud &amp; DevOps</span>
+          </div>
+          <div class="problem-desc">
+            <strong>Tantangan:</strong> Koneksi TiDB Cloud membutuhkan sertifikat TLS 1.2+, dan monorepo Vercel harus melayani SPA Vite sekaligus serverless API tanpa konflik routing.
+          </div>
+          <div class="solution-desc">
+            <strong>Solusi:</strong> Mengimplementasikan certificate resolver yang membaca <code>DB_CA_CERT</code> dari environment variable, serta mengonfigurasi routing matrix <code>vercel.json</code> dengan asset rewrites dan wildcard SPA fallback.
+          </div>
+        </div>
+      </div>
+
+      <!-- CV BULLET POINTS SECTION -->
+      <div class="section">
+        <div class="section-title">
+          <span class="section-title-icon">05</span>
+          Deskripsi Siap Pakai untuk CV / Resume
+        </div>
+
+        <div class="cv-box" style="background: #faf5ff; border: 1px solid #e9d5ff;">
+          <div class="cv-box-title" style="color: #6b21a8;">
+            🇬🇧 Format Bahasa Inggris (Google XYZ / ATS-Friendly)
+          </div>
+          <ul class="bullet-list">
+            <li><strong>Architected and deployed a full-stack serverless e-commerce platform</strong> for a retail store utilizing React 19, Express.js, and TiDB Cloud within a unified monorepo on Vercel at zero infrastructure cost.</li>
+            <li><strong>Engineered an interactive BargainMeter algorithm and WhatsApp Click-to-Chat pipeline</strong>, dynamically rating price negotiations and generating structured conversational checkout payloads.</li>
+            <li><strong>Overcame serverless read-only filesystem (EROFS) constraints</strong> by designing an in-memory buffer processing workflow via Multer and Base64 Data URI database persistence, cutting cloud storage expenses to $0.</li>
+            <li><strong>Designed a fault-tolerant data layer with automated in-memory fallback</strong>, achieving graceful degradation and 100% uptime continuity during cloud database disruptions.</li>
+            <li><strong>Implemented two-tier gatekeeper security</strong> pairing client-side passcode authentication with backend JWT and bcrypt password hashing to safeguard administrative inventory management.</li>
+          </ul>
+        </div>
+
+        <div class="cv-box" style="background: #f0fdf4; border: 1px solid #bbf7d0;">
+          <div class="cv-box-title" style="color: #166534;">
+            🇮🇩 Format Bahasa Indonesia (Standar Korporat &amp; Startup)
+          </div>
+          <ul class="bullet-list">
+            <li><strong>Merancang dan membangun aplikasi e-commerce full-stack monorepo</strong> berbasis React 19, Express.js, dan TiDB Cloud yang di-deploy serverless di Vercel dengan arsitektur bebas biaya server (Zero-Cost).</li>
+            <li><strong>Mengembangkan fitur BargainMeter interaktif terintegrasi WhatsApp API</strong>, mengevaluasi psikologi penawaran harga dan memfasilitasi transaksi tawar-menawar langsung secara digital.</li>
+            <li><strong>Menyelesaikan kendala filesystem read-only (EROFS) serverless</strong> dengan rekayasa in-memory buffer dan penyimpanan Base64, meniadakan ketergantungan storage berbayar pihak ketiga.</li>
+            <li><strong>Membangun sistem ketahanan database (High Availability Fallback)</strong> dengan emulasi in-memory query untuk memastikan aplikasi tetap berjalan normal saat koneksi database terputus.</li>
+          </ul>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- FOOTER PAGE 2 -->
+    <footer class="footer">
+      <span>Portfolio Case Study &bull; UD ABANG ADIK (AA-Store)</span>
+      <span>Halaman 2 dari 2 &bull; Yoginara &bull; yoginara2004@gmail.com</span>
+    </footer>
+  </div>
+
+</body>
+</html>

@@ -9,10 +9,18 @@ export default function AdminSecretModal({ isOpen, onClose, onSuccess }) {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // Mengambil kode dari Environment Variable (.env) agar tidak terlihat di GitHub
-    const correctCode = import.meta.env.VITE_ADMIN_SECRET_CODE;
+    // Mengambil kode dari Environment Variable (.env) dengan fallback default
+    const correctCode = (import.meta.env.VITE_ADMIN_SECRET_CODE || "Pudan2004").trim();
+    const inputCode = (code || "").trim();
     
-    if (code === correctCode) {
+    // Mendukung kode dari .env, default Pudan2004 (case-insensitive), atau kode awal 123456
+    const isValid = 
+      inputCode === correctCode || 
+      inputCode.toLowerCase() === correctCode.toLowerCase() ||
+      inputCode === "123456" ||
+      inputCode.toLowerCase() === "pudan2004";
+
+    if (isValid) {
       setError("");
       setCode("");
       onSuccess();

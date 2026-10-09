@@ -32,10 +32,12 @@ export default function AdminLogin({ onLoginSuccess, onBack }) {
       if (response.ok) {
         // Berhasil login via server API
         onLoginSuccess(data.token, data.admin);
+        return;
       } else {
         setError(data.message || "Gagal masuk. Periksa kembali kredensial Anda.");
       }
-      console.warn("⚠️  [OFFLINE DETECTED] Express Server luring atau mati.");
+    } catch (err) {
+      console.warn("⚠️  [OFFLINE DETECTED] Express Server luring atau mati:", err);
       setError("Koneksi ke server gagal. Harap pastikan server aktif untuk bisa masuk.");
     } finally {
       setIsLoading(false);
