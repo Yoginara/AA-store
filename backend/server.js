@@ -77,7 +77,7 @@ const authenticateToken = (req, res, next) => {
 // ==========================================
 
 // 1. POST: Login Admin
-app.post("/api/auth/login", async (req, res) => {
+app.post(["/api/auth/login", "/auth/login"], async (req, res) => {
   const { username, password } = req.body;
 
   if (!username || !password) {
@@ -115,7 +115,7 @@ app.post("/api/auth/login", async (req, res) => {
 });
 
 // 2. GET: Ambil Semua Produk (Public)
-app.get("/api/products", async (req, res) => {
+app.get(["/api/products", "/products"], async (req, res) => {
   try {
     const [rows] = await db.query("SELECT * FROM products ORDER BY id DESC");
     res.json(rows);
@@ -125,7 +125,7 @@ app.get("/api/products", async (req, res) => {
 });
 
 // 3. GET: Detail Produk per ID (Public)
-app.get("/api/products/:id", async (req, res) => {
+app.get(["/api/products/:id", "/products/:id"], async (req, res) => {
   const { id } = req.params;
   try {
     const [rows] = await db.query("SELECT * FROM products WHERE id = ?", [id]);
@@ -139,7 +139,7 @@ app.get("/api/products/:id", async (req, res) => {
 });
 
 // 4. POST: Tambah Produk Baru (Protected - Admin Only)
-app.post("/api/products", authenticateToken, upload.single("image"), async (req, res) => {
+app.post(["/api/products", "/products"], authenticateToken, upload.single("image"), async (req, res) => {
   const { name, category, price, image_url } = req.body;
 
   if (!name || !category || !price) {
@@ -183,7 +183,7 @@ app.post("/api/products", authenticateToken, upload.single("image"), async (req,
 });
 
 // 5. PUT: Edit Produk (Protected - Admin Only)
-app.put("/api/products/:id", authenticateToken, upload.single("image"), async (req, res) => {
+app.put(["/api/products/:id", "/products/:id"], authenticateToken, upload.single("image"), async (req, res) => {
   const { id } = req.params;
   const { name, category, price, image_url } = req.body;
 
@@ -230,7 +230,7 @@ app.put("/api/products/:id", authenticateToken, upload.single("image"), async (r
 });
 
 // 6. DELETE: Hapus Produk (Protected - Admin Only)
-app.delete("/api/products/:id", authenticateToken, async (req, res) => {
+app.delete(["/api/products/:id", "/products/:id"], authenticateToken, async (req, res) => {
   const { id } = req.params;
 
   try {
@@ -242,6 +242,14 @@ app.delete("/api/products/:id", authenticateToken, async (req, res) => {
   } catch (error) {
     res.status(500).json({ message: "Gagal menghapus produk.", error: error.message });
   }
+});
+
+// Middleware Global Error Handler (Selalu kembalikan respon format JSON)
+app.use((err, req, res, next) => {
+  console.error("🔥 [SERVER ERROR]:", err);
+  res.status(500).json({
+    message: err.message || "Terjadi kesalahan internal pada server."
+  });
 });
 
 // Booting Express Server (hanya saat running lokal / standalone, bukan di Vercel serverless)
